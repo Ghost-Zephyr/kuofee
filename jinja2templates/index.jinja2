@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include "partals/head.jinja2" %}
+</head>
+<body>
+{% include "partals/header.jinja2" %}
+{% if player %}
+
+<h1>Logged in as {{ player['nick'] }}!</h1>
+
+{% else %}
+<center>
+<div>
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a href="/login" class="nav-link active" style="font-size: 24px">Login</a>
+    </li>
+</ul>
+</div>
+</center>
+{% endif %}
+{% include "partals/footer.jinja2" %}
+</body>
+</html>
