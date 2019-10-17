@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import request, make_response
+from flask import request, make_response, redirect
 from authlib.jose import jwt
 import bcrypt
 
@@ -13,9 +13,9 @@ def set_keypair(keys):
     return keypair
 
 def read_keyfiles():
-    prvkf = open("key.prv", "r")
-    pubkf = open("key.pub", "r")
     try:
+        prvkf = open("key.pem", "r")
+        pubkf = open("key.pub", "r")
         b = prvkf.read(1)
         private_key = b
         while b != "":
@@ -35,40 +35,45 @@ def read_keyfiles():
     return private_key, public_key
 
 def register(db):
-    return NotImplementedError
+    return NotImplementedError # TODO:
 
 def login(db):
     try:
-        try:
-            pJ = request.json['p']
-        except KeyError:
-            resp = make_response("No player.")
-            resp.status_code = 400
-            return resp
-        p = db.p.find_one({ "nick": pJ['nick'] })
-        if bcrypt.checkpw(pJ['pwd'].encode('utf-8'), p['pwd']):
+        if request.json:
+            json = request.json
+            resp = make_response("Token created.")
+        elif request.form:
+            json = request.form
+            resp = redirect("/")
+        p = db.p.find_one({ "nick": json['nick'] })
+        if bcrypt.checkpw(json['pwd'].encode('utf-8'), p['pwd']):
             exp = datetime.utcnow() + timedelta(days=7)
             token = jwt.encode({'alg': 'RS256'}, {
-                'nick': pJ['nick'],
-                'admin': pJ['admin'],
+                'nick': p['nick'],
+                'admin': p['admin'],
                 'exp': exp,
-            }, jwt_keypair['private'])
-            resp = make_response("Token created.")
-            resp.set_cookie("token", token, max_age=60*60*24*7)
+            }, keypair['private'])
+            
+            resp.set_cookie("jwt", token, max_age=60*60*24*7)
             return resp
         else:
             resp = make_response("Wrong password!")
             resp.status_code = 401
             return resp
-    except:
-        resp = make_response("Could not create token.")
-        resp.status_code = 500
+    except KeyError:
+        resp = make_response("Request error.")
+        resp.status_code = 400
         return resp
 
-def check():
+def logout():
+    resp = redirect("/")
+    resp.set_cookie("jwt", "", max_age=0)
+    return resp
+
+def get():
     try:
-        dec = jwt.decode(request.cookies.get('token'), jwt_keypair['public'])
+        dec = jwt.decode(request.cookies.get('jwt'), keypair['public'])
         dec.validate()
         return dec
     except:
-        return -1
+        return False

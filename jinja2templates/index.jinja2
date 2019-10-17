@@ -8,17 +8,16 @@
 {% if player %}
 
 <h1>Logged in as {{ player['nick'] }}!</h1>
+<div style="margin-bottom: 10vw"></div>
 
 {% else %}
-<center>
-<div>
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item">
-        <a href="/login" class="nav-link active" style="font-size: 24px">Login</a>
-    </li>
-</ul>
+<div class="container" style="max-width: 100%;">
+<div class="row" style="margin: 10vw;">
+    <div class="col-sm" style="text-align: center;">
+        <h1><a href="/login" class="nav-link active">Login</a></h1>
+    </div>
 </div>
-</center>
+</div>
 {% endif %}
 {% include "partals/footer.jinja2" %}
 </body>

@@ -22,8 +22,12 @@ db = mongo.db
 
 # ----- Routes -----
 @app.route("/", methods=['GET'])
-def rootRoute():
-    return game.index()
+def indexRoute():
+    return game.index(url)
+
+@app.route("/login", methods=['GET'])
+def loginRoute():
+    return game.login(url)
 
 @app.route("/static/<path:path>", methods=['GET'])
 def staticRoute(path):
@@ -31,21 +35,21 @@ def staticRoute(path):
 
 # ----- API Routes -----
 @app.route("/api/p/register", methods=['POST'])
-def userRoute():
+def registerApiRoute():
     return jwt.register(db)
 
 @app.route("/api/p/login", methods=['POST'])
-def usersRoute():
+def loginApiRoute():
     return jwt.login(db)
 
 @app.route("/api/p/logout", methods=['GET'])
-def logoutRoute():
-    resp = make_response("Logged out.")
-    resp.set_cookie("jwt", "", max_age=0)
-    return resp
+def logoutApiRoute():
+    return jwt.logout()
 
 # --- Game API ---
-
+@app.route("/api/g/player", methods=['GET'])
+def playerRoute():
+    return api.player(db)
 
 # --- Error handlers ---
 @app.errorhandler(404)

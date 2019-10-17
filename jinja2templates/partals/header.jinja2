@@ -1,10 +1,7 @@
-<h1>Kuofee</h1>
+<h1 class="">Kuofee</h1>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <a class="navbar-brand" href="/">Kuofee</a>
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link disabled" href="#">Link</a>
-        </li>
         <li class="nav-item">
             {% if player %}
             <a class="nav-link" href="/player">Player</a>
@@ -13,9 +10,23 @@
             {% endif %}
         </li>
         <li class="nav-item">
-            {% if player['admin'] %}
-            <a class="nav-link" href="/admin">Admin stuffs</a>
-            {% endif %}
+            <a class="nav-link disabled" href="#">Link</a>
         </li>
-    </div>
+
+        {% if player %}
+        {% if player['admin'] %}
+        <li class="nav-item">
+            <a class="nav-link" href="/admin">Admin stuffs</a>
+        </li>
+        {% endif %}
+        {% endif %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        {% if player %}
+        <li class="nav-item" style="align-content: right">
+            {# <form action="/api/p/logout" method="get"><button class="nav-link"></button></form> #}
+            <a class="nav-link" href="/api/p/logout?redirect=1">Logout</a>
+        </li>
+        {% endif %}
+    </ul>
 </nav>

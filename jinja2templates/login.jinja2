@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include "partals/head.jinja2" %}
+</head>
+<body>
+{% include "partals/header.jinja2" %}
+{% if player %}
+
+<h1>Logged in as {{ player['nick'] }}!</h1>
+
+{% else %}
+
+<form action="/api/p/login" method="post" {# enctype="application/json" #} style="margin-top: 7vw; text-align: center;">
+    <div class="form-group">
+        <label for="nick">
+        <input name="nick" id="nick" placeholder="Nickname" type="username" class="form-control">
+    </div>
+    <div>
+        <label for="pwd">
+        <input name="pwd" id="pwd" placeholder="Password" type="password" class="form-control">
+    </div>
+    <div style="margin: 1vw;">
+        <button {# type="submit" #} class="btn btn-primary">Login</button>
+    </div>
+</form>
+
+{% endif %}
+{% include "partals/footer.jinja2" %}
+</body>
+</html>
