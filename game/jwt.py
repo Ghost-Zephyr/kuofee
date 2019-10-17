@@ -14,8 +14,8 @@ def set_keypair(keys):
 
 def read_keyfiles():
     try:
-        prvkf = open("key.pem", "r")
-        pubkf = open("key.pub", "r")
+        prvkf = open("jwt-keys/key.pem", "r")
+        pubkf = open("jwt-keys/key.pub", "r")
         b = prvkf.read(1)
         private_key = b
         while b != "":
