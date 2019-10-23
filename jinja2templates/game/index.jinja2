@@ -1,0 +1,42 @@
+{% extends "partals/base.jinja2" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+{% if player %}
+<h3 class="title" style="margin: 4vw">Main Menu</h3>
+<div class="container" style="max-width: 80%">
+<div class="row">
+    <div class="col-sm-2">
+        <h3>AI Game</h3>
+        <p>Play against a bot</p>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a href="/game/q/ai"><button class="btn btn-primary">Quick play</button></a>
+            </li>
+        </ul>
+        <br>
+        <h3>PvP Game</h3>
+        <p>Play against another player</p>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a href="/game/q/pvp"><button class="btn btn-primary">Quick play</button></a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-5">
+    </div>
+    <div class="col-sm-5">
+        <h3>In early alpha</h3>
+    </div>
+</div>
+<div style="margin-bottom: 7vw"></div>
+</div>
+{% else %}
+<div class="container" style="max-width: 100%;">
+<div class="row" style="margin: 10vw;">
+    <div class="col-sm" style="text-align: center;">
+        <h1><a href="/login" class="nav-link active">Login</a></h1>
+    </div>
+</div>
+</div>
+{% endif %}
+{% endblock %}

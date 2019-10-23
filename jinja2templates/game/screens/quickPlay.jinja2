@@ -1,0 +1,33 @@
+{% extends "partals/base.jinja2" %}
+{% block title %}Home{% endblock %}
+{% block addhead %}
+    <style>
+#back {
+    margin: 3vw;
+    align-content: right;
+}
+.howf {
+    overflow: hidden;
+}
+    </style>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+{% endblock %}
+{% block content %}
+<h3 id="title" class="title"></h3>
+<div class="row">
+    <div class="col-sm-10"></div>
+</div>
+<div class="row"><div class="col-sm-10" id="back"><a href="/game" style="align-self: right"><button class="btn btn-primary">Back</button></a></div></div>
+{% endblock %}
+{% block script %}
+<script>
+var mode = "{{ mode }}";
+if (mode === "ai")
+    $('#title').html("");
+else if (mode === "pvp")
+    $('#title').html("PvP quick play not implemented yet.");
+else
+    $('#title').html("Not accepted quick play mode!");
+
+</script>
+{% endblock %}

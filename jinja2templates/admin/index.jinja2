@@ -1,0 +1,30 @@
+{% extends "partals/base.jinja2" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1 class="title">Admin Stuff</h1>
+<div class="container">
+<div class="row">
+    <div class="col-sm-3">
+        <h3>Admin Panel</h3>
+        <p>shady shit</p>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link disable" href="/admin/players">Players</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-9">
+        <h3>All Players:</h3>
+        <div class="playersContainer">
+{% for player in db.p.find() %}
+            <div>
+                <h5>{{ player['nick'] }}</h5>
+                <h6>Password hash:</h6><p>{{ player['pwd'] }}</p>
+            </div>
+{% endfor %}
+        </div>
+    </div>
+</div>
+</div>
+<div style="margin-bottom: 7vw"></div>
+{% endblock %}

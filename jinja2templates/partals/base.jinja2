@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %} - kuofee.sivert.pw</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+body {
+    background-color: #333;
+    color: #22AF22;
+}
+#container {
+    overflow: hidden;
+    max-width: 90%;
+}
+.title {
+    margin: 2vw;
+}
+    </style>
+{% endblock %}
+{% block addhead %}
+{% endblock %}
+</head>
+<body>
+<h1 class="title">Kuofee</h1>
+{% include "partals/navbar.jinja2" %}
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+{% block footer %}
+<footer class="page-footer font-small green pt-5">
+    <div class="footer-copyright text-center py-3">&copy; 2019 <a href="http://kuofee.sivert.pw/" class="disabled">kuofee.sivert.pw</a></div>
+</footer>
+{% endblock %}
+{% block script %}
+{% endblock %}
+</body>
+</html>
