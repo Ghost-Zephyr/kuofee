@@ -11,7 +11,7 @@ jwt.keypair = jwt.set_keypair(jwt.read_keyfiles())
 app = Flask(__name__)
 CORS(app)
 
-port = 8080
+port = 8698
 app.config['DEBUG'] = True
 
 app.config['MONGO_DBNAME'] = "kuofee"
@@ -31,6 +31,10 @@ def loginRoute():
 @app.route("/logout", methods=['GET'])
 def logoutRoute():
     return jwt.forntendLogout()
+
+@app.route("/register", methods=['GET'])
+def registerRoute():
+    return game.register()
 
 @app.route("/static/<path:path>", methods=['GET'])
 def staticRoute(path):
@@ -59,7 +63,7 @@ def playerRoute():
 # ----- API Routes -----
 @app.route("/api/p/register", methods=['POST'])
 def registerApiRoute():
-    return jwt.register(db)
+    return api.register(db)
 
 @app.route("/api/p/login", methods=['POST'])
 def loginApiRoute():

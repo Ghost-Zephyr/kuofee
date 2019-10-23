@@ -31,12 +31,6 @@
 <div style="margin-bottom: 7vw"></div>
 </div>
 {% else %}
-<div class="container" style="max-width: 100%;">
-<div class="row" style="margin: 10vw;">
-    <div class="col-sm" style="text-align: center;">
-        <h1><a href="/login" class="nav-link active">Login</a></h1>
-    </div>
-</div>
-</div>
+{% include "partals/login.jinja2" %}
 {% endif %}
 {% endblock %}

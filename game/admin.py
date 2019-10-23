@@ -6,6 +6,6 @@ def index(db):
     try:
         jwt = get()
         if jwt['admin']:
-            return render_game_template('admin/index.jinja2', "Admin Stuff", db)
+            return render_game_template('admin/index.jinja2', db)
     except:
         abort(404)

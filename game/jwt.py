@@ -34,9 +34,6 @@ def read_keyfiles():
         pubkf.close()
     return private_key, public_key
 
-def register(db):
-    return NotImplementedError # TODO:
-
 def login(db):
     try:
         if request.json:
@@ -62,6 +59,16 @@ def login(db):
         resp = make_response("Request error.")
         resp.status_code = 400
         return resp
+
+def createToken(db, nick):
+    p = db.p.find_one({ "nick": nick })
+    exp = datetime.utcnow() + timedelta(days=7)
+    token = jwt.encode({'alg': 'RS256'}, {
+        'nick': p['nick'],
+        'admin': p['admin'],
+        'exp': exp,
+    }, keypair['private'])
+    return token
 
 def apiLogout():
     resp = make_response("Logged out.")

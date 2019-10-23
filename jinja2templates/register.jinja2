@@ -1,5 +1,5 @@
 {% extends "partals/base.jinja2" %}
-{% block title %}Login{% endblock %}
+{% block title %}Register{% endblock %}
 {% block addhead %}
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 {% endblock %}
@@ -11,7 +11,7 @@
 </div>
 {% else %}
 <div style="text-align: center;">
-    <h3 id="title" class="title">Login</h3>
+    <h3 id="title" class="title">Register</h3>
 </div>
 <form id="loginForm" enctype="application/json" style="margin-top: 2vw; text-align: center;">
     <div class="form-group">
@@ -22,21 +22,26 @@
         <label for="pwd">
         <input name="pwd" id="pwd" placeholder="Password" type="password" class="form-control">
     </div>
+    <div>
+        <label for="pwd1">
+        <input name="pwd1" id="pwd1" placeholder="Password again" type="password" class="form-control">
+    </div>
     <div style="margin: 1vw;">
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary">Register</button>
     </div>
 </form>
 <script>
 $("#loginForm").submit(function(event){
 	event.preventDefault();
 	$.ajax({
-        url: "/api/p/login",
+        url: "/api/p/register",
         type: "post",
         data: $(this).serialize(),
         statusCode: {
             200: function() { window.location.replace("/"); },
-            401: function() { $('#title').html("Wrong password!"); $('#title').attr('style', "color: #C42069;"); },
-            400: function() { $('#title').html("No such user."); $('#title').attr('style', "color: #C42069;"); }
+            406: function() { $('#title').html("Passwords does not match!"); $('#title').attr('style', "color: #C42069;"); },
+            409: function() { $('#title').html("Nick taken."); $('#title').attr('style', "color: #C42069;"); },
+            400: function() { $('#title').html("Could not create user."); $('#title').attr('style', "color: #C42069;"); }
         }
 	});
 });

@@ -8,6 +8,9 @@ def index():
 def login():
     return render_template('login.jinja2')
 
+def register():
+    return render_template('register.jinja2')
+
 # --- Game route functions ---
 def mainMenu(db):
     return render_game_template('game/index.jinja2', db)
