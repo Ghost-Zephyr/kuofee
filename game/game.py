@@ -1,14 +1,25 @@
-from .jinja import j2_env
+from .jinja import *
 from .jwt import get
 
-def render_template(tf, title, url):
-    template = j2_env.get_template(tf)
-    player = get()
-    rendered_template = template.render(title=title, url=url, player=player)
+# --- Home Paige route functions ---
+def index():
+    return render_template('index.jinja2')
+
+def login():
+    return render_template('login.jinja2')
+
+# --- Game route functions ---
+def mainMenu(db):
+    return render_game_template('game/index.jinja2', db)
+
+def qpAi(db, mode):
+    template = j2_env.get_template('game/screens/quickPlay.jinja2')
+    rendered_template = template.render(mode=mode)
     return rendered_template
 
-def index(url):
-    return render_template('index.jinja2', "Home", url)
 
-def login(url):
-    return render_template('login.jinja2', "Login", url)
+def walterPenny():
+    template = j2_env.get_template('game/screens/WalterPenny.jinja2')
+    rendered_template = template.render()
+    return rendered_template
+

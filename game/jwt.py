@@ -41,10 +41,8 @@ def login(db):
     try:
         if request.json:
             json = request.json
-            resp = make_response("Token created.")
-        elif request.form:
+        else:
             json = request.form
-            resp = redirect("/")
         p = db.p.find_one({ "nick": json['nick'] })
         if bcrypt.checkpw(json['pwd'].encode('utf-8'), p['pwd']):
             exp = datetime.utcnow() + timedelta(days=7)
@@ -53,19 +51,24 @@ def login(db):
                 'admin': p['admin'],
                 'exp': exp,
             }, keypair['private'])
-            
+            resp = make_response("Token created.")
             resp.set_cookie("jwt", token, max_age=60*60*24*7)
             return resp
         else:
             resp = make_response("Wrong password!")
             resp.status_code = 401
             return resp
-    except KeyError:
+    except:
         resp = make_response("Request error.")
         resp.status_code = 400
         return resp
 
-def logout():
+def apiLogout():
+    resp = make_response("Logged out.")
+    resp.set_cookie("jwt", "", max_age=0)
+    return resp
+
+def forntendLogout():
     resp = redirect("/")
     resp.set_cookie("jwt", "", max_age=0)
     return resp

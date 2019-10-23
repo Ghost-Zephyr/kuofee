@@ -1,9 +1,10 @@
-from .jinja import j2_env
+from .jinja import *
+from . import admin
 from . import game
 from . import api
 from . import jwt
 
-def err404(url, error):
+def err404(error):
     template = j2_env.get_template('error.jinja2')
-    rendered_template = template.render(title="Error 404", url=url, err=error)
+    rendered_template = template.render(title="Error 404", err=error)
     return rendered_template

@@ -1,24 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    {% include "partals/head.jinja2" %}
-</head>
-<body>
-{% include "partals/header.jinja2" %}
+{% extends "partals/base.jinja2" %}
+{% block title %}Home{% endblock %}
+{% block content %}
 {% if player %}
-
-<h1>Logged in as {{ player['nick'] }}!</h1>
+<h1 class="title">Logged in as {{ player['nick'] }}!</h1>
 <div style="margin-bottom: 10vw"></div>
-
 {% else %}
-<div class="container" style="max-width: 100%;">
-<div class="row" style="margin: 10vw;">
+<div class="container">
+<div class="row">
     <div class="col-sm" style="text-align: center;">
         <h1><a href="/login" class="nav-link active">Login</a></h1>
     </div>
 </div>
 </div>
 {% endif %}
-{% include "partals/footer.jinja2" %}
-</body>
-</html>
+{% endblock %}

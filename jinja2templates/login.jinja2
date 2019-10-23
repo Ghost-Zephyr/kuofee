@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    {% include "partals/head.jinja2" %}
-</head>
-<body>
-{% include "partals/header.jinja2" %}
+{% extends "partals/base.jinja2" %}
+{% block title %}Login{% endblock %}
+{% block content %}
 {% if player %}
-
-<h1>Logged in as {{ player['nick'] }}!</h1>
-
+<div style="margin: 4vw">
+    <h1 class="title">Logged in as {{ player['nick'] }}!</h1>
+    <a href="/logout"><button style="margin: 4vw" class="btn btn-primary">Logout?</button></a>
+</div>
 {% else %}
-
-<form action="/api/p/login" method="post" {# enctype="application/json" #} style="margin-top: 7vw; text-align: center;">
+<div style="text-align: center;">
+    <h3 id="title" class="title">Login</h3>
+</div>
+<form id="loginForm" style="margin-top: 2vw; text-align: center;">
     <div class="form-group">
         <label for="nick">
         <input name="nick" id="nick" placeholder="Nickname" type="username" class="form-control">
@@ -21,11 +20,23 @@
         <input name="pwd" id="pwd" placeholder="Password" type="password" class="form-control">
     </div>
     <div style="margin: 1vw;">
-        <button {# type="submit" #} class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary">Login</button>
     </div>
 </form>
-
+<script>
+$("#loginForm").submit(function(event){
+	event.preventDefault();
+	$.ajax({
+        url: "/api/p/login",
+        type: "post",
+        data: $(this).serialize(),
+        statusCode: {
+            200: function() { window.location.replace("/"); },
+            401: function() { $('#title').html("Wrong password!"); $('#title').attr('style', "color: #C42069;"); },
+            400: function() { $('#title').html("No such user."); $('#title').attr('style', "color: #C42069;"); }
+        }
+	});
+});
+</script>
 {% endif %}
-{% include "partals/footer.jinja2" %}
-</body>
-</html>
+{% endblock %}
