@@ -1,6 +1,5 @@
+from .jinja import get, render_game_template
 from flask import abort
-from .jinja import *
-from .jwt import get
 
 def index(db):
     try:

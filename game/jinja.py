@@ -10,6 +10,6 @@ def render_template(tf):
 
 def render_game_template(tf, db):
     template = j2_env.get_template(tf)
-    rendered_template = template.render(player=get())
+    rendered_template = template.render(player=get(), db=db)
     return rendered_template
 

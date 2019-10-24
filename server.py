@@ -3,7 +3,7 @@ from werkzeug.security import safe_str_cmp
 from flask import Flask, Response, jsonify, request, redirect, make_response
 from flask_pymongo import PyMongo
 from flask_cors import CORS
-from game import *
+from game import game, api, jwt, admin, err404
 
 # ----- App init -----
 jwt.keypair = jwt.set_keypair(jwt.read_keyfiles())
@@ -36,11 +36,19 @@ def logoutRoute():
 def registerRoute():
     return game.register()
 
+@app.route("/about", methods=['GET'])
+def aboutRoute():
+    return game.about()
+
 @app.route("/static/<path:path>", methods=['GET'])
 def staticRoute(path):
     return redirect("/")
 
 # --- Game Routes ---
+@app.route("/player", methods=['GET'])
+def playerRoute():
+    return game.player()
+
 # - Main Game View -
 @app.route("/game", methods=['GET'])
 def gameIndexRoute():
@@ -57,7 +65,7 @@ def gameWalterPennyRoute():
 
 # --- Game API ---
 @app.route("/api/g/player", methods=['GET'])
-def playerRoute():
+def playerApiRoute():
     return api.player(db)
 
 # ----- API Routes -----

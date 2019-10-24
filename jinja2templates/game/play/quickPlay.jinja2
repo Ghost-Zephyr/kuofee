@@ -6,19 +6,20 @@
     margin: 3vw;
     align-content: right;
 }
-.howf {
-    overflow: hidden;
-}
     </style>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 {% endblock %}
 {% block content %}
 {% if player %}
-<h3 id="title" class="title"></h3>
-<div class="row">
-    <div class="col-sm-10"></div>
+<div class="container">
+<div class="row" id="gameRow">
+    <div class="col-sm-10">
+        <h3 class="title">Penny's game loading...</h3>
+    </div>
 </div>
-<div class="row"><div class="col-sm-10" id="back"><a href="/game" style="align-self: right"><button class="btn btn-primary">Back</button></a></div></div>
+<div style="margin-bottom: 7vw"></div>
+</div>
+<div class="row"><div class="col-sm-10" id="back"><a href="/game"><button class="btn btn-primary">Back</button></a></div></div>
 {% else %}
 {% include "partals/login.jinja2" %}
 {% endif %}
@@ -26,8 +27,12 @@
 {% block script %}
 <script>
 var mode = "{{ mode }}";
-if (mode === "ai")
-    $('#title').html("");
+if (mode === "ai") {
+	$.ajax({
+        url: "/game/WalterPenny",
+        type: "get"
+	}).done(function(resp) { $("#gameRow").html(resp); });
+}
 else if (mode === "pvp")
     $('#title').html("PvP quick play not implemented yet.");
 else
