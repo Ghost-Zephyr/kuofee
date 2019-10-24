@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 from werkzeug.security import safe_str_cmp
-from flask import Flask, Response, jsonify, request, redirect, make_response, send_from_directory
+from flask import Flask, Response, jsonify, request, redirect, make_response, send_from_directory, abort
 from flask_pymongo import PyMongo
 from flask_cors import CORS
 from os import path
-from game import game, api, jwt, admin, err404
+from game import game, api, jwt, admin, err404, get
 
 # ----- App init -----
 jwt.keypair = jwt.set_keypair(jwt.read_keyfiles())
@@ -40,12 +40,6 @@ def registerRoute():
 @app.route("/about", methods=['GET'])
 def aboutRoute():
     return game.about()
-
-@app.route("/static/<path:path>", methods=['GET'])
-def staticRoute(path):
-    if app.config['SERVE_STATIC']:
-        return send_from_directory('static', path)
-    return redirect("/")
 
 # --- Game Routes ---
 @app.route("/player", methods=['GET'])
@@ -84,6 +78,11 @@ def loginApiRoute():
 def logoutApiRoute():
     return jwt.apiLogout()
 
+# --- Admin API ---
+@app.route("/api/a/spell", methods=['GET', 'POST'])
+def adminSpellRoute():
+    return admin.apiSpell(db)
+
 # --- Admin Stuff ---
 @app.route("/admin", methods=['GET'])
 def adminRoute():
@@ -93,10 +92,25 @@ def adminRoute():
 def adminSubRoute(sub):
     return admin.sub(db, sub)
 
-# --- Admin API ---
-@app.route("/api/a/spell", methods=['GET', 'POST'])
-def adminSpellRoute():
-    return admin.apiSpell(db)
+# --- Static Routes ---
+@app.route("/admin/static/<path:path>", methods=['GET'])
+def staticAdminRoute(path):
+    try:
+        jwt = get()
+        if jwt['admin']:
+            if app.config['SERVE_STATIC']:
+                return send_from_directory('jinja2templates/admin/static', path)
+            return redirect("/")
+        else:
+            abort(404)
+    except:
+        abort(404)
+
+@app.route("/static/<path:path>", methods=['GET'])
+def staticRoute(path):
+    if app.config['SERVE_STATIC']:
+        return send_from_directory('static', path)
+    return redirect("/")
 
 # --- Error handlers ---
 @app.errorhandler(404)

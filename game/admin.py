@@ -19,7 +19,13 @@ def sub(db, sub):
         jwt = get()
         if jwt['admin']:
             template = j2_env.get_template('admin/sub.jinja2')
-            rendered_template = template.render(player=get(), db=db, sub=sub, spellFiles=listdir('game/spells'))
+            spellFiles = listdir('game/spells')
+            try:
+                spellFiles.remove("__init__.py")
+                spellFiles.remove("__pycache__")
+            except ValueError:
+                pass
+            rendered_template = template.render(player=get(), db=db, sub=sub, spellFiles=spellFiles)
             return rendered_template
         else:
             abort(404)
@@ -36,8 +42,16 @@ def apiSpell(db):
                     json = request.json
                 else:
                     json = request.form
+                append = False
+                with open("game/spells/__init__.py", "r") as initF:
+                    if json['spellFile'] not in initF.read():
+                        append = True
+                        pass
+                if append:
+                    with open("game/spells/__init__.py", "a") as initF:
+                        initF.write("from ."+json['spellFile']+" import *")
                 spells.insert_one(json)
-            else:
+            else: # request.method == 'GET'
                 spellsJ = jsonify(spells.find())
                 return spellsJ
         else:

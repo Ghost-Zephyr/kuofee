@@ -1,5 +1,8 @@
 {% extends "partals/base.jinja2" %}
 {% block title %}Admin Stuff - {{sub}}{% endblock %}
+{% block addhead %}
+    <link rel="stylesheet" href="/admin/static/sub.css">
+{% endblock %}
 {% block content %}
 {% if sub == "palyers" %}
 
@@ -19,17 +22,25 @@
             </li>
         </ul>
     </div>
-    <div class="col-sm-7">
+    <div id="spellMaker" class="col-sm-6">
         <h2>Spell maker</h2>
-        <form>
-            <select class="btn btn-primary">
-{% for spellFile in spellFiles %}
-                <option>{{spellFile}}</option>
-{% endfor %}
-            </select>
+        <form id="newSpellForm" enctype="application/json">
+            <div class="form-group">
+                <label for="target">
+                <input name="target" id="target" placeholder="Target" type="text" class="form-control">
+            </div>
+            <div>
+                <label for="damage">
+                <input name="damage" id="damage" placeholder="Damage" type="text" class="form-control">
+            </div>
         </form>
+        <select id="spellFile" form="newSpellForm" class="btn btn-primary">
+{% for spellFile in spellFiles %}
+            <option>{{spellFile}}</option>
+{% endfor %}
+        </select>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3">
         <h3>All Spells:</h3>
         <div class="spellsContainer">
 {% for spell in db.s.find() %}
