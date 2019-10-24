@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 from werkzeug.security import safe_str_cmp
-from flask import Flask, Response, jsonify, request, redirect, make_response
+from flask import Flask, Response, jsonify, request, redirect, make_response, send_from_directory
 from flask_pymongo import PyMongo
 from flask_cors import CORS
+from os import path
 from game import game, api, jwt, admin, err404
 
 # ----- App init -----
@@ -13,7 +14,7 @@ CORS(app)
 
 port = 8698
 app.config['DEBUG'] = True
-
+app.config['SERVE_STATIC'] = True
 app.config['MONGO_DBNAME'] = "kuofee"
 app.config['MONGO_URI'] = "mongodb://127.0.0.1:27017/kuofee"
 mongo = PyMongo(app)
@@ -42,6 +43,8 @@ def aboutRoute():
 
 @app.route("/static/<path:path>", methods=['GET'])
 def staticRoute(path):
+    if app.config['SERVE_STATIC']:
+        return send_from_directory('static', path)
     return redirect("/")
 
 # --- Game Routes ---
@@ -85,6 +88,10 @@ def logoutApiRoute():
 @app.route("/admin", methods=['GET'])
 def adminRoute():
     return admin.index(db)
+
+@app.route("/admin/<sub>", methods=['GET'])
+def adminSubRoute(sub):
+    return admin.sub(db, sub)
 
 # --- Error handlers ---
 @app.errorhandler(404)

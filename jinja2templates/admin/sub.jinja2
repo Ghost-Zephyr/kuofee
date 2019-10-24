@@ -1,0 +1,13 @@
+{% extends "partals/base.jinja2" %}
+{% block title %}Admin Stuff - {{sub}}{% endblock %}
+{% block content %}
+{% if sub == "palyers" %}
+
+{% elif sub == "spells" %}
+
+{% else %}
+<script>
+window.location.replace("/admin")
+</script>
+{% endif %}
+{% endblock %}

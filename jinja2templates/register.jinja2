@@ -13,7 +13,7 @@
 <div style="text-align: center;">
     <h3 id="title" class="title">Register</h3>
 </div>
-<form id="loginForm" enctype="application/json" style="margin-top: 2vw; text-align: center;">
+<form id="registerForm" enctype="application/json" style="margin-top: 2vw; text-align: center;">
     <div class="form-group">
         <label for="nick">
         <input name="nick" id="nick" placeholder="Nickname" type="username" class="form-control">
@@ -30,21 +30,6 @@
         <button type="submit" class="btn btn-primary">Register</button>
     </div>
 </form>
-<script>
-$("#loginForm").submit(function(event){
-	event.preventDefault();
-	$.ajax({
-        url: "/api/p/register",
-        type: "post",
-        data: $(this).serialize(),
-        statusCode: {
-            200: function() { window.location.replace("/"); },
-            406: function() { $('#title').html("Passwords does not match!"); $('#title').attr('style', "color: #C42069;"); },
-            409: function() { $('#title').html("Nick taken."); $('#title').attr('style', "color: #C42069;"); },
-            400: function() { $('#title').html("Could not create user."); $('#title').attr('style', "color: #C42069;"); }
-        }
-	});
-});
-</script>
+<script type="text/javascript" src="/static/register.js"></script>
 {% endif %}
 {% endblock %}
