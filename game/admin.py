@@ -2,6 +2,7 @@ from .jinja import get, j2_env, render_game_template
 from flask import request, abort
 from os import listdir
 
+# --- Views ---
 def index(db):
     try:
         jwt = get()
@@ -27,6 +28,28 @@ def sub(db, sub):
                 pass
             rendered_template = template.render(player=get(), db=db, sub=sub, spellFiles=spellFiles)
             return rendered_template
+        else:
+            abort(404)
+    except:
+        abort(404)
+
+# --- API ---
+def apiPlayers(db):
+    try:
+        jwt = get()
+        if jwt['admin']:
+            ps = {}
+            for player in players.find():
+                ps['nick'] = {
+                    'pwd': player['pwd'],
+                    'admin': player['admin'],
+                    'pvestats': player['pvestats'],
+                    'pvpstats': player['pvpstats'],
+                    'game': player['game'],
+                    'deck': player['deck'],
+                    'collection': player['collection']
+                }
+            return jsonify(ps)
         else:
             abort(404)
     except:

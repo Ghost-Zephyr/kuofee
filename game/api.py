@@ -30,29 +30,15 @@ def player(db):
     try:
         players = db.p
         jwt = get()
-        if jwt['admin']:
-            ps = {}
-            for player in players.find():
-                ps['nick'] = {
-                    'pwd': player['pwd'],
-                    'admin': player['admin'],
-                    'pvestats': player['pvestats'],
-                    'pvpstats': player['pvpstats'],
-                    'game': player['game'],
-                    'deck': player['deck'],
-                    'collection': player['collection']
-                }
-            return jsonify(ps)
+        if jwt:
+            player = players.find_one({ 'nick': jwt['nick'] })
+            player['_id'] = str(player['_id'])
+            player.remove('pwd')
+            return jsonify(player)
         else:
-            if jwt:
-                player = players.find_one({ 'nick': jwt['nick'] })
-                player['_id'] = str(player['_id'])
-                player.remove('pwd')
-                return jsonify(player)
-            else:
-                resp = make_response("Not logged in.")
-                resp.status_code = 401
-                return resp
+            resp = make_response("Not logged in.")
+            resp.status_code = 401
+            return resp
     except:
         resp = make_response("Unknown error.")
         resp.status_code = 401
