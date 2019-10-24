@@ -3,16 +3,58 @@ from authlib.jose import jwt as authlibjwt
 import bcrypt
 from .jwt import get, createToken
 
+def newGame(db):
+    try:
+        jwt = get()
+        new_game = {
+            'type': 'ai',
+            'player': {
+                'nick': jwt['nick'],
+                'HP': 777,
+                'MP': 13
+            }
+        }
+        goid = db.g.insert(new_game)
+        db.p.update_one({
+            { 'nick': jwt['nick'] },
+            { '$set': { 'active_game': str(goid) } }
+        })
+
+        resp.status_code = 201
+    except:
+        resp = make_response("Could not create game.")
+        resp.status_code = 500
+        return resp
+
 def player(db):
-    players = db.p
-    token = get()
-    if token:
-        player = players.find_one({ 'nick': token['nick'] })
-        player['_id'] = str(player['_id'])
-        player.pop('pwd')
-        return jsonify(player)
-    else:
-        resp = make_response("Not logged in.")
+    try:
+        players = db.p
+        jwt = get()
+        if jwt['admin']:
+            ps = {}
+            for player in players.find():
+                ps['nick'] = {
+                    'pwd': player['pwd'],
+                    'admin': player['admin'],
+                    'pvestats': player['pvestats'],
+                    'pvpstats': player['pvpstats'],
+                    'game': player['game'],
+                    'deck': player['deck'],
+                    'collection': player['collection']
+                }
+            return jsonify(ps)
+        else:
+            if jwt:
+                player = players.find_one({ 'nick': jwt['nick'] })
+                player['_id'] = str(player['_id'])
+                player.remove('pwd')
+                return jsonify(player)
+            else:
+                resp = make_response("Not logged in.")
+                resp.status_code = 401
+                return resp
+    except:
+        resp = make_response("Unknown error.")
         resp.status_code = 401
         return resp
 
@@ -35,8 +77,9 @@ def register(db):
             players.insert_one({
                 'nick': json['nick'],
                 'pwd': bcrypt.hashpw(json['pwd'].encode('utf-8'), bcrypt.gensalt()),
-                'admin': 0,
+                'admin': False,
                 'pvestats': {},
+                'pvpstats': {},
                 'game': {},
                 'deck': {},
                 'collection': {}

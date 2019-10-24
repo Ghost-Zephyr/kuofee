@@ -1,4 +1,5 @@
 from .jinja import get, j2_env, render_template, render_game_template
+from flask import abort
 
 # --- Home Paige route functions ---
 def index():
@@ -24,7 +25,6 @@ def qpAi(db, mode):
     template = j2_env.get_template('game/play/quickPlay.jinja2')
     rendered_template = template.render(mode=mode, player=get())
     return rendered_template
-
 
 def walterPenny():
     template = j2_env.get_template('game/screens/WalterPenny.jinja2')

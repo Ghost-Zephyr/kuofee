@@ -9,13 +9,15 @@
 {% if player %}
 <div class="container">
 <div class="row" id="gameRow">
-    <div class="col-sm-10">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
         <h3 class="title">Penny's game loading...</h3>
     </div>
+    <div class="col-sm-2"></div>
 </div>
 <div style="margin-bottom: 7vw"></div>
 </div>
-<div class="row"><div class="col-sm-10" id="back"><a href="/game"><button class="btn btn-primary">Back</button></a></div></div>
+<div class="row"><div class="col-sm-10" id="back"><a href="/game"><button class="btn btn-primary" style="float: right;">Back</button></a></div></div>
 {% else %}
 {% include "partals/login.jinja2" %}
 {% endif %}
