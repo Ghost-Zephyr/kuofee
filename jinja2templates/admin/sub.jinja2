@@ -4,7 +4,44 @@
 {% if sub == "palyers" %}
 
 {% elif sub == "spells" %}
-
+<h3 class="title" style="margin: 4vw">Admin spell panel</h3>
+<div class="container">
+<div class="row">
+    <div class="col-sm-3">
+        <h3>Admin spells:</h3>
+        <p>Much op</p>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link"><button class="btn btn-danger">Such op spell</button></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"><button class="btn btn-warning">Instant death</button></a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-7">
+        <h2>Spell maker</h2>
+        <form>
+            <select class="btn btn-primary">
+{% for spellFile in spellFiles %}
+                <option>{{spellFile}}</option>
+{% endfor %}
+            </select>
+        </form>
+    </div>
+    <div class="col-sm-2">
+        <h3>All Spells:</h3>
+        <div class="spellsContainer">
+{% for spell in db.s.find() %}
+            <div>
+                <h5>{{ spell['name'] }}</h5>
+                <h6>Desctiption</h6><p>{{ spell['desc'] }}</p>
+            </div>
+{% endfor %}
+        </div>
+    </div>
+</div>
+</div>
 {% else %}
 <script>
 window.location.replace("/admin")

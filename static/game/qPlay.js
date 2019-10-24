@@ -8,5 +8,5 @@ if (mode === "ai") {
 else if (mode === "pvp")
     $('#title').html("PvP quick play not implemented yet.");
 else
-    $('#title').html("Not accepted quick play mode!");
+    window.location.replace("/");
 

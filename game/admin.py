@@ -1,5 +1,6 @@
 from .jinja import get, j2_env, render_game_template
 from flask import request, abort
+from os import listdir
 
 def index(db):
     try:
@@ -8,7 +9,8 @@ def index(db):
             template = j2_env.get_template('admin/index.jinja2')
             rendered_template = template.render(player=get(), db=db)
             return rendered_template
-        abort(404)
+        else:
+            abort(404)
     except:
         abort(404)
 
@@ -17,9 +19,10 @@ def sub(db, sub):
         jwt = get()
         if jwt['admin']:
             template = j2_env.get_template('admin/sub.jinja2')
-            rendered_template = template.render(player=get(), db=db, sub=sub)
+            rendered_template = template.render(player=get(), db=db, sub=sub, spellFiles=listdir('game/spells'))
             return rendered_template
-        abort(404)
+        else:
+            abort(404)
     except:
         abort(404)
 
@@ -28,9 +31,16 @@ def apiSpell(db):
         jwt = get()
         if jwt['admin']:
             spells = db.s
-            if request.method == 'GET':
+            if request.method == 'POST':
+                if request.json:
+                    json = request.json
+                else:
+                    json = request.form
+                spells.insert_one(json)
+            else:
                 spellsJ = jsonify(spells.find())
                 return spellsJ
-        abort(404)
+        else:
+            abort(404)
     except:
         abort(404)
