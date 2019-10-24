@@ -1,13 +1,9 @@
 {% extends "partals/base.jinja2" %}
 {% block title %}Home{% endblock %}
 {% block addhead %}
-    <style>
-#back {
-    margin: 3vw;
-    align-content: right;
-}
-    </style>
+    <link rel="stylesheet" href="/static/game/play.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>var mode = "{{ mode }}";</script>
 {% endblock %}
 {% block content %}
 {% if player %}
@@ -25,18 +21,5 @@
 {% endif %}
 {% endblock %}
 {% block script %}
-<script>
-var mode = "{{ mode }}";
-if (mode === "ai") {
-	$.ajax({
-        url: "/game/WalterPenny",
-        type: "get"
-	}).done(function(resp) { $("#gameRow").html(resp); });
-}
-else if (mode === "pvp")
-    $('#title').html("PvP quick play not implemented yet.");
-else
-    $('#title').html("Not accepted quick play mode!");
-
-</script>
+<script type="text/javascript" src="/static/game/play.js"></script>
 {% endblock %}

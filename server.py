@@ -93,6 +93,11 @@ def adminRoute():
 def adminSubRoute(sub):
     return admin.sub(db, sub)
 
+# --- Admin API ---
+@app.route("/api/a/spell", methods=['GET', 'POST'])
+def adminSpellRoute():
+    return admin.apiSpell(db)
+
 # --- Error handlers ---
 @app.errorhandler(404)
 def err404route(error=None):
