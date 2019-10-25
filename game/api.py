@@ -45,7 +45,7 @@ def player(db):
         return resp
 
 def update(db):
-    try:
+#    try:
         if request.json:
             json = request.json
         else:
@@ -57,37 +57,33 @@ def update(db):
             resp.status_code = 401
             return resp
         player = db.p.find_one({ 'nick': jwt['nick'] })
-        if checkpw(jwt['pwd'], player['pwd']):
-            if checkpw(json['pwd'], player['pwd']):
-                updated = []
-                if json['nick']:
-                    db.p.update_one(
-                        { 'nick': player['nick'] },
-                        { '$set': { 'nick': json['nick'] } }
-                    )
-                    updated.append("nick")
-                resp = ""
-                for update in updated:
-                    resp += update+" "
-                resp = make_response("Updated "+resp[0:-1])
-                resp.status_code = 200
-            else:
-                resp = make_response("Wrong password!")
-                resp.status_code = 403
-                return resp
-        else:
-            resp = make_response("Not signed in!")
-            resp.status_code = 401
-            return resp
-    except:
-        if updated:
-            resp = make_response("Updated only *"+updated+"* due to error")
-            resp.status_code = 500
+        if checkpw(json['pwd'].encode("utf-8"), player['pwd']):
+            updated = []
+            if json['nick'] != "":
+                db.p.update_one(
+                    { 'nick': player['nick'] },
+                    { '$set': { 'nick': json['nick'] } }
+                )
+                updated.append("nick")
+            resp = ""
+            for update in updated:
+                resp += update+" "
+            resp = make_response("Updated "+resp[0:-1])
+            resp.status_code = 200
             return resp
         else:
-            resp = make_response("Could not update!")
-            resp.status_code = 500
+            resp = make_response("Wrong password!")
+            resp.status_code = 403
             return resp
+#    except:
+#        if updated:
+#            resp = make_response("Updated only *"+updated+"* due to error")
+#            resp.status_code = 400
+#            return resp
+#        else:
+#            resp = make_response("Could not update!")
+#            resp.status_code = 400
+#            return resp
 
 def register(db):
     try:
@@ -123,7 +119,7 @@ def register(db):
         return resp
     except:
         resp = make_response("Could not create user.")
-        resp.status_code = 500
+        resp.status_code = 400
         return resp
 
 def coffee():

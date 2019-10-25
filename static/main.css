@@ -12,3 +12,10 @@ body {
 .title {
     margin: 2vw;
 }
+form > small {
+    margin-right: 2vw;
+    font-size: 65%;
+}
+form > div button {
+    float: right;
+}
