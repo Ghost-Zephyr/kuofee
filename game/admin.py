@@ -4,16 +4,29 @@ from os import listdir
 
 # --- Views ---
 def index(db):
-    try:
+#    try:
         jwt = get()
         if jwt['admin']:
             template = j2_env.get_template('admin/index.jinja2')
-            rendered_template = template.render(player=get(), db=db)
+            players = []
+            for player in db.p.find():
+                if player['superadmin']:
+                    title = "Superadmin"
+                elif player['admin']:
+                    title = "Admin"
+                else:
+                    title = "Spellcaster"
+                players.append({
+                    'nick': player['nick'],
+                    'pwd': player['pwd'],
+                    'title': title
+                })
+            rendered_template = template.render(player=get(), db=db, players=players)
             return rendered_template
         else:
             abort(404)
-    except:
-        abort(404)
+#    except:
+#        abort(404)
 
 def sub(db, sub):
     try:

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from werkzeug.security import safe_str_cmp
 from flask import Flask, Response, jsonify, request, redirect, make_response, send_from_directory, abort
 from flask_pymongo import PyMongo
 from flask_cors import CORS

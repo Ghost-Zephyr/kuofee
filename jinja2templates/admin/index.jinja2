@@ -16,15 +16,19 @@
             </li>
         </ul>
     </div>
-    <div class="col-sm-7">
+    <div class="col-sm-6">
         <h3>Add something here later</h3>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3">
         <h3>All Players:</h3>
         <div class="playersContainer">
-{% for player in db.p.find() %}
+{% for player in players %}
             <div>
-                <h5>{{ player['nick'] }}</h5>
+{% if player['title'] == "Spellcaster" %}
+                <h5>{{ player['title'] }} {{ player['nick'] }}</h5>
+{% else %}
+                <h5 style="color: #F42069">{{ player['title'] }} {{ player['nick'] }}</h5>
+{% endif %}
                 <h6>Password hash:</h6><p>{{ player['pwd'] }}</p>
             </div>
 {% endfor %}
