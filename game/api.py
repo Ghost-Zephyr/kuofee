@@ -125,3 +125,8 @@ def register(db):
         resp = make_response("Could not create user.")
         resp.status_code = 500
         return resp
+
+def coffee():
+    resp = make_response("I'm a teapot")
+    resp.status_code = 418
+    return resp

@@ -20,9 +20,14 @@ mongo = PyMongo(app)
 db = mongo.db
 
 # ----- Routes -----
-@app.route("/", methods=['GET'])
+@app.route("/", methods=['GET', 'BREW'])
 def indexRoute():
-    return game.index()
+    if request.method == 'BREW':
+        resp = make_response("/coffee")
+        resp.status_code = 301
+        return resp
+    else:
+        return game.index()
 
 @app.route("/login", methods=['GET'])
 def loginRoute():
@@ -114,6 +119,11 @@ def staticRoute(path):
     if app.config['SERVE_STATIC']:
         return send_from_directory('static', path)
     return redirect("/")
+
+# --- Easter Egg ---
+@app.route("/coffee", methods=['BREW', 'POST'])
+def HTCPCPsupport():
+    return api.coffee()
 
 # --- Error handlers ---
 @app.errorhandler(404)
