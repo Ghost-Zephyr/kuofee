@@ -2,4 +2,6 @@
 
 1. Make Penny's game and/or dice game.
 2. Make a nice player page. For updating nick, pwd and such.
+  - Forms looking like shit
 3. Make admin panel sub for player managment were it is possible to make another user admin.
+  - ===||===
