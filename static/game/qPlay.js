@@ -1,5 +1,6 @@
 
 if (mode === "ai") {
+    // TODO: add dice game alternative to Penny's game
 	$.ajax({
         url: "/game/WalterPenny",
         type: "get"
