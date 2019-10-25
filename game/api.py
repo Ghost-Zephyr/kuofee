@@ -41,7 +41,7 @@ def player(db):
             return resp
     except:
         resp = make_response("Unknown error.")
-        resp.status_code = 401
+        resp.status_code = 400
         return resp
 
 def register(db):
@@ -51,29 +51,32 @@ def register(db):
             json = request.json
         else:
             json = request.form
-        if json['pwd'] != json['pwd1']:
-            resp = make_response("Passwords doesn't match!")
-            resp.status_code = 406
-            return resp
-        elif players.find_one({ 'nick': json['nick'] }):
+        if players.find_one({ 'nick': json['nick'] }):
             resp = make_response("Nick taken.")
             resp.status_code = 409
             return resp
-        else:
-            players.insert_one({
-                'nick': json['nick'],
-                'pwd': bcrypt.hashpw(json['pwd'].encode('utf-8'), bcrypt.gensalt()),
-                'admin': False,
-                'pvestats': {},
-                'pvpstats': {},
-                'game': {},
-                'deck': {},
-                'collection': {}
-            })
-            token = createToken(db, json['nick'])
-            resp = make_response("Created user and logged in.")
-            resp.set_cookie("jwt", token, max_age=60*60*24*7)
-            return resp
+        try:
+            if json['pwd'] != json['pwd1']:
+                resp = make_response("Passwords doesn't match!")
+                resp.status_code = 406
+                return resp
+        except KeyError:
+            pass
+        players.insert_one({
+            'nick': json['nick'],
+            'pwd': bcrypt.hashpw(json['pwd'].encode('utf-8'), bcrypt.gensalt()),
+            'superadmin': False,
+            'admin': False,
+            'pvestats': {},
+            'pvpstats': {},
+            'game': {},
+            'deck': {},
+            'collection': {}
+        })
+        token = createToken(db, json['nick'])
+        resp = make_response("Created user and logged in.")
+        resp.set_cookie("jwt", token, max_age=60*60*24*7)
+        return resp
     except:
         resp = make_response("Could not create user.")
         resp.status_code = 400
