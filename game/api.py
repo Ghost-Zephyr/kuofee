@@ -1,6 +1,6 @@
 from flask import jsonify, request, make_response
 from authlib.jose import jwt as authlibjwt
-import bcrypt
+from bcrypt import hashpw, gensalt, checkpw
 from .jwt import get, createToken
 
 def newGame(db):
@@ -36,22 +36,66 @@ def player(db):
             player.remove('pwd')
             return jsonify(player)
         else:
-            resp = make_response("Not logged in.")
+            resp = make_response("Not signed in.")
             resp.status_code = 401
             return resp
     except:
         resp = make_response("Unknown error.")
-        resp.status_code = 400
+        resp.status_code = 500
         return resp
 
-def register(db):
+def update(db):
     try:
-        players = db.p
         if request.json:
             json = request.json
         else:
             json = request.form
-        if players.find_one({ 'nick': json['nick'] }):
+        updated = False
+        jwt = get()
+        if not jwt:
+            resp = make_response("Not signed in!")
+            resp.status_code = 401
+            return resp
+        player = db.p.find_one({ 'nick': jwt['nick'] })
+        if checkpw(jwt['pwd'], player['pwd']):
+            if checkpw(json['pwd'], player['pwd']):
+                updated = []
+                if json['nick']:
+                    db.p.update_one(
+                        { 'nick': player['nick'] },
+                        { '$set': { 'nick': json['nick'] } }
+                    )
+                    updated.append("nick")
+                resp = ""
+                for update in updated:
+                    resp += update+" "
+                resp = make_response("Updated "+resp[0:-1])
+                resp.status_code = 200
+            else:
+                resp = make_response("Wrong password!")
+                resp.status_code = 403
+                return resp
+        else:
+            resp = make_response("Not signed in!")
+            resp.status_code = 401
+            return resp
+    except:
+        if updated:
+            resp = make_response("Updated only *"+updated+"* due to error")
+            resp.status_code = 500
+            return resp
+        else:
+            resp = make_response("Could not update!")
+            resp.status_code = 500
+            return resp
+
+def register(db):
+    try:
+        if request.json:
+            json = request.json
+        else:
+            json = request.form
+        if db.p.find_one({ 'nick': json['nick'] }):
             resp = make_response("Nick taken.")
             resp.status_code = 409
             return resp
@@ -62,9 +106,9 @@ def register(db):
                 return resp
         except KeyError:
             pass
-        players.insert_one({
+        db.p.insert_one({
             'nick': json['nick'],
-            'pwd': bcrypt.hashpw(json['pwd'].encode('utf-8'), bcrypt.gensalt()),
+            'pwd': hashpw(json['pwd'].encode('utf-8'), gensalt()),
             'superadmin': False,
             'admin': False,
             'pvestats': {},
@@ -74,10 +118,10 @@ def register(db):
             'collection': {}
         })
         token = createToken(db, json['nick'])
-        resp = make_response("Created user and logged in.")
+        resp = make_response(token)
         resp.set_cookie("jwt", token, max_age=60*60*24*7)
         return resp
     except:
         resp = make_response("Could not create user.")
-        resp.status_code = 400
+        resp.status_code = 500
         return resp

@@ -4,7 +4,7 @@ from os import listdir
 
 # --- Views ---
 def index(db):
-#    try:
+    try:
         jwt = get()
         if jwt['admin']:
             template = j2_env.get_template('admin/index.jinja2')
@@ -25,8 +25,8 @@ def index(db):
             return rendered_template
         else:
             abort(404)
-#    except:
-#        abort(404)
+    except:
+        abort(404)
 
 def sub(db, sub):
     try:

@@ -73,6 +73,10 @@ def registerApiRoute():
 def loginApiRoute():
     return jwt.login(db)
 
+@app.route("/api/p/update", methods=['PUT'])
+def updatePlayerApiRoute():
+    return api.update(db)
+
 @app.route("/api/p/logout", methods=['GET'])
 def logoutApiRoute():
     return jwt.apiLogout()
