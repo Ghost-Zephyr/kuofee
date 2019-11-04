@@ -68,7 +68,9 @@ def update(db):
             resp = ""
             for update in updated:
                 resp += update+" "
+            token = createToken(db, json['nick'])
             resp = make_response("Updated "+resp[0:-1])
+            resp.set_cookie("jwt", token, max_age=60*60*24*7)
             resp.status_code = 200
             return resp
         else:

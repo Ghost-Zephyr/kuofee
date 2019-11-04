@@ -42,12 +42,7 @@ def login(db):
             json = request.form
         p = db.p.find_one({ "nick": json['nick'] })
         if bcrypt.checkpw(json['pwd'].encode('utf-8'), p['pwd']):
-            exp = datetime.utcnow() + timedelta(days=7)
-            token = jwt.encode({'alg': 'RS256'}, {
-                'nick': p['nick'],
-                'admin': p['admin'],
-                'exp': exp,
-            }, keypair['private'])
+            token = createToken(db, json['nick'])
             resp = make_response("Token created.")
             resp.set_cookie("jwt", token, max_age=60*60*24*7)
             return resp

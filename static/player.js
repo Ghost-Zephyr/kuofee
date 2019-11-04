@@ -7,7 +7,7 @@ $("#updatePlayerForm").submit(function(event) {
 	$.ajax({
         url: "/api/p/update",
         type: "put",
-        data: $(this).serialize(),
+        data: $(this).serialize(), // $("#updatePlayerForm").serialize()
         statusCode: {
             200: function() { $('#tmp').html("HTTP 200!"); },
             401: function() { $('#tmp').html("Wrong password!"); $('#tmp').attr('style', "color: #C42069;"); },
@@ -15,4 +15,4 @@ $("#updatePlayerForm").submit(function(event) {
         }
 	}).done(function() { $(this).attr("style", "visibility: collapse"); });
 });
-// $("#updatePlayerForm").serialize()
+

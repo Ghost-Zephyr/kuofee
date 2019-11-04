@@ -23,9 +23,7 @@ db = mongo.db
 @app.route("/", methods=['GET', 'BREW'])
 def indexRoute():
     if request.method == 'BREW':
-        resp = make_response("/coffee")
-        resp.status_code = 301
-        return resp
+        return api.coffee()
     else:
         return game.index()
 
